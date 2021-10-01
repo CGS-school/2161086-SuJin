@@ -1,0 +1,30 @@
+#define SP A0 // SensorPin
+#define GL 8 // green led 
+#define RL 7 // red led
+
+void setup(){
+  Serial.begin(9600);
+}
+ 
+void loop(){
+  int value = analogRead(SP);
+  value = map(value, 0, 159, 0, 255);
+  // map(value, fromLow, fromHigh, toLow, toHigh)
+  // map(변환할 수 , 현재 범위 값의 하한, 현재 범위 값의 상한, 목표 범위 값의 하한, 목표 범위 값의 상한)
+  Serial.println(value);
+  
+  if (value < 123)
+  {
+    digitalWrite(GL, LOW);
+    digitalWrite(RL, HIGH);
+  }
+  else
+  {
+    digitalWrite(GL, HIGH);
+    digitalWrite(RL, LOW);
+  }
+  
+  delay(100);
+}
+
+// 3.07N = 123(in serial monitor)

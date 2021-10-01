@@ -1,0 +1,78 @@
+#include <Servo.h>
+
+#define SW 8
+#define SERVO_PIN 4
+#define SOUND 7
+
+Servo servo;
+
+
+void setup()
+{
+  pinMode(SW, INPUT);
+  pinMode(SERVO_PIN, OUTPUT);
+  pinMode(SOUND, OUTPUT);
+  servo.attach(SERVO_PIN);
+}
+
+void turnSound(int);
+void count_time(int);
+
+void loop()
+{
+  // 서보가 평행일 경우  = 0
+  // 서보가 수직일 경우 = 1
+  int is_servo_on = 0;
+  // 스위치가 눌렸을 경우 = LOW
+  // 스위치가 안 눌렸을 경우 = HIGH
+  int swValue;
+  
+  servo.write(90);
+  is_servo_on = 1;
+  count_time(is_servo_on);
+  servo.write(0);
+  is_servo_on = 0;
+  count_time(is_servo_on);
+  
+}
+
+void turnSound(int is_servo_on)
+{
+  int swValue = digitalRead(SW);
+  
+  if (is_servo_on == 0 && swValue == LOW)
+  {
+    tone(SOUND, 523);
+  }
+  else
+  {
+    noTone(SOUND);
+  }
+}
+
+void count_time(int is_servo_on)
+{
+  unsigned long cur_time = 0, old_time = 0;
+  unsigned long time_taken = 0;
+  
+  if (is_servo_on == 1)
+  {
+    while(time_taken < 2000)
+    {
+      old_time = millis();
+      turnSound(is_servo_on);
+      cur_time = millis();
+      time_taken += cur_time - old_time;
+    }
+  }
+  else
+  {
+    while(time_taken < 5000)
+    {
+      old_time = millis();
+      turnSound(is_servo_on);
+      cur_time = millis();
+      time_taken += cur_time - old_time;
+    }
+  }
+}

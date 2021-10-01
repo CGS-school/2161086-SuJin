@@ -1,0 +1,73 @@
+#define G 8	// Green LED
+#define R 7	// Red LED
+#define PS A0	// pressure sensor
+#define TRIG 12	// 초음파 보내는 핀
+#define ECHO 13 // 초음파 받는 핀
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(TRIG, OUTPUT);
+  pinMode(ECHO, INPUT);
+}
+
+void PreSen();
+void UltraSen();
+
+ 
+void loop()
+{
+  
+  PreSen();
+  delay(10);
+  UltraSen();
+  delay(10);
+}
+
+void PreSen()
+{
+  int value = analogRead(PS);
+  value = map(value, 0, 159, 0, 255);
+  // map(value, fromLow, fromHigh, toLow, toHigh)
+  // map(변환할 수 , 현재 범위 값의 하한, 현재 범위 값의 상한, 목표 범위 값의 하한, 목표 범위 값의 상한)
+  //Serial.print("pressure:");
+  //Serial.println(value);
+  
+  if (value < 123)
+  {
+    digitalWrite(R, HIGH);
+  }
+  else
+  {
+    digitalWrite(R, LOW);
+  }
+}
+
+void UltraSen()
+{
+   long duration, distance;
+  
+  digitalWrite(TRIG, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG, LOW);
+  
+  duration = pulseIn(ECHO, HIGH);
+  distance = duration * 17 / 1000;
+  
+  if (distance < 27)
+  {
+    digitalWrite(G, HIGH);
+  }
+  else
+  {
+    digitalWrite(G, LOW);
+  }
+  /*
+  Serial.print("\nDuration:");
+  Serial.println(duration);
+  Serial.print("Distane: ");
+  Serial.print(distance);
+  Serial.println("cm");*/
+}
